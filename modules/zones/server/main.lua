@@ -24,10 +24,11 @@ end
 Zones.createPrivate = function(location, type, color, onInteract, helpText, drawDist, itrDist, baseAllowed)
     local zone = Zone(location, type, color, onInteract, helpText, drawDist, itrDist, true, baseAllowed)
     local marker = { id = zone.zoneID, type = zone.type, color = zone.color, help = zone.helpText, position = zone.location, distances = { zone.drawDist, zone.itrDist } }
-    local players = NarcosServer_PlayersManager.list
-    for k, v in pairs(players) do
-        if zone:isAllowed(k) then
-            NarcosServer.toClient("newMarker", k, marker)
+    local players = ESX.GetPlayers()
+    for i = 1, #players, 1 do
+        local kk = players[i]
+        if zone:isAllowed(kk) then
+            TriggerClientEvent("newMarker", kk, marker)
         end
     end
     return zone.zoneID

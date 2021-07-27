@@ -110,4 +110,5 @@ end
 ---@public
 function Lab:interact(_src)
     local xPlayer = ESX.GetPlayerFromId(_src)
+    TriggerClientEvent("fl_labs:openItr", _src)
 end

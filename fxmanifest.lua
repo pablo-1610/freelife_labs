@@ -17,6 +17,7 @@ client_scripts {
 
     "client/*.lua",
     "client/objects/*.lua",
+    "client/menu/*.lua",
 }
 
 server_scripts {
