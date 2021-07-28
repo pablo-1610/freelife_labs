@@ -22,12 +22,23 @@ Drugs = {
         bobIplGetter = "GetBikerWeedFarmObject",
 
         farm_components = {
-            --{item = "beer", label = "Bière", max = 50, harvest = vector3(2873.1667, 4601.2075, 48.0166)},
-            --{item = "pepsi", label = "Pepsi", max = 10, harvest = vector3(-623.8909, 1464.9534, 308.8686)},
+            {item = "terre", label = "Terre", max = 50, harvest = vector3(2873.1667, 4601.2075, 48.0166), blip = {208, 64, 0.9, "Récolte de terre"}},
+            {item = "graine", label = "Graine de cannabis", max = 50, harvest = vector3(-623.8909, 1464.9534, 308.8686)},
+        },
+
+        production = {
+            prod_in = {
+                {1, "terre"},
+                {5, "graine"}
+            },
+
+            prod_out = {
+                {1, "weed"}
+            }
         },
 
         lab = {
-            price = 150,
+            capacity = 50,
 
             upgrades = {
                 [UpgradeTypes.STYLE] = {
@@ -55,7 +66,7 @@ Drugs = {
 
             positions = {
                 inDoor = {pos = vector3(1062.11, -3186.45, -39.09), heading = 182.58},
-                exit = {pos = vector3(1066.03, -3183.44, -39.16), heading = 94.8},
+                exit = vector3(1065.93, -3183.43, -39.16),
             };
 
             -- Additional things

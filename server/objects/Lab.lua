@@ -21,8 +21,10 @@
 ---@field public flags table
 ---@field public container table
 
+---@field public instance number
 ---@field public zone Zone
 ---@field public exitZone Zone
+---@field public exitBlip Blip
 ---@field public inside table
 
 Lab = {}
@@ -50,9 +52,11 @@ setmetatable(Lab, {
         self.container = get(data.container)
 
         -- Def protected
+        self.instance = (self.id+Config.instancesRanges)
         self.inside = {}
         self.zone = Zones.createPublic(vector3(self.entry.x, self.entry.y, self.entry.z), 20, { r = 255, g = 255, b = 255, a = 130 }, function(_src) self:interact(_src) end, "Appuyez sur ~INPUT_CONTEXT~ pour intéragir avec le laboratoire", 1.0, 1.0)
-        self.exitZone = Zones.createPrivate(Drugs[self.type].lab.positions.exit, 20, { r = 255, g = 79, b = 79, a = 130 }, function(_src) self:exit(_src) end, "Appuyez sur ~INPUT_CONTEXT~ pour sortir du laboratoire", 1.0, 1.0)
+        self.exitZone = Zones.createPrivate(Drugs[self.type].lab.positions.exit, 20, { r = 255, g = 69, b = 69, a = 130 }, function(_src) self:exit(_src) end, "Appuyez sur ~INPUT_CONTEXT~ pour sortir du laboratoire", 300.0, 1.0)
+        self.exitBlip = Blips.createPrivate(Drugs[self.type].lab.positions.exit, 126, 49, 1.0, "Sortie du laboratoire", false)
         return self;
     end
 })
@@ -90,17 +94,29 @@ function Lab:enter(_src)
     if self:isInside(_src) then
         return
     end
+    TriggerClientEvent("fl_lags:animTeleport", _src, Drugs[self.type].lab.positions.inDoor)
     self:addInside(_src)
-    self.exitZone:addAllowed(_src)
-    Utils:putInInstanceRange(_src, Config.instancesRanges)
+    Zones.addAllowed(self.exitZone, _src)
+    Blips.addAllowed(self.exitBlip, _src)
+    Utils:putInInstance(_src, self.instance)
+    Wait(3500)
+    TriggerClientEvent("fl_labs:enterLab", _src, {
+        DrugTypeLabels[self.type],
+        #self.container,
+        Drugs[self.type].lab.capacity,
+        self.faction
+    })
 end
 
 function Lab:exit(_src)
     if not self:isInside(_src) then
         return
     end
-    self.exitZone:removeAllowed(_src)
+    TriggerClientEvent("fl_labs:exitLab", _src)
+    TriggerClientEvent("fl_lags:animTeleportt", _src, self.entry.x, self.entry.y, self.entry.z)
     self:removeFromInside(_src)
+    Zones.removeAllowed(self.exitZone, _src)
+    Blips.removeAllowed(self.exitBlip, _src)
     Utils:setOnPublicInstance(_src)
 end
 
@@ -110,5 +126,5 @@ end
 ---@public
 function Lab:interact(_src)
     local xPlayer = ESX.GetPlayerFromId(_src)
-    TriggerClientEvent("fl_labs:openItr", _src)
+    TriggerClientEvent("fl_labs:openItr", _src, self.id)
 end

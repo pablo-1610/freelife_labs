@@ -41,6 +41,18 @@ RegisterCommand("createlab", function(_src, args)
     Utils:notify(_src, "~y~Création du labo en cours...")
 end)
 
+RegisterNetEvent("ft_labs:enterLab")
+AddEventHandler("ft_labs:enterLab", function(labId)
+    local _src = source
+    if not Labs.list[labId] then
+        DropPlayer(_src, "[ERREUR] fl_labs: le laboratoire est invalide")
+        return
+    end
+    ---@type Lab
+    local lab = Labs.list[labId]
+    lab:enter(_src)
+end)
+
 ---initialize
 ---@return nil
 ---@public

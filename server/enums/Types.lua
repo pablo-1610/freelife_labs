@@ -16,3 +16,9 @@ DrugType = {
     COKE = 2,
     METH = 3,
 }
+
+DrugTypeLabels = {
+    [DrugType.WEED] = "Weed",
+    [DrugType.COKE] = "Coke",
+    [DrugType.METH] = "Meth",
+}

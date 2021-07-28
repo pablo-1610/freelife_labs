@@ -47,6 +47,15 @@ function Utils:putInInstanceRange(_src, range)
     SetPlayerRoutingBucket(_src, (range+_src))
 end
 
+---putInInstance
+---@param _src number
+---@param instance number
+---@return void
+---@public
+function Utils:putInInstance(_src, instance)
+    SetPlayerRoutingBucket(_src, instance)
+end
+
 ---setOnPublicInstance
 ---@param _src number
 ---@return void

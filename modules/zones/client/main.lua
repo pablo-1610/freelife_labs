@@ -24,7 +24,7 @@ AddEventHandler("fl_labs:loaded", function()
         for zoneId, zone in pairs(zones.list) do
             local zoneCoords = zone.position
             local dist = #(pos - zoneCoords)
-            if dist <= zone.distances[1] then
+            if dist <= zone.distances[1] and not isMenuOpened and canInteractWithZone then
                 closeToMarker = true
                 DrawMarker(zone.type, zoneCoords, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.75, 0.75, 0.75, zone.color.r, zone.color.g, zone.color.b, zone.color.a, 0, 1, 2, 0, nil, nil, 0)
                 if dist <= zone.distances[2] then

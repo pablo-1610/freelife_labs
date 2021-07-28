@@ -13,7 +13,7 @@
 
 
 
-local function openMenu()
+local function openMenu(id)
     if isMenuOpened then
         return
     end
@@ -21,7 +21,7 @@ local function openMenu()
     FreezeEntityPosition(PlayerPedId(), true)
     isMenuOpened = true
 
-    RMenu.Add(cat, sub(cat, "main"), RageUI.CreateMenu(title, desc))
+    RMenu.Add(cat, sub(cat, "main"), RageUI.CreateMenu(title, desc, nil, nil, "menu", "black"))
     RMenu:Get(cat, sub(cat, "main")).Closed = function()
     end
 
@@ -32,6 +32,13 @@ local function openMenu()
             local shouldStayOpened = false
             RageUI.IsVisible(RMenu:Get(cat, sub(cat, "main")), true, true, true, function()
                 shouldStayOpened = true
+                RageUI.ButtonWithStyle("Entrer dans le laboratoire", "Appuyez pour entrer dans le laboratoire", {RightLabel = "→"}, true, function(_,_,s)
+                    if s then
+                        shouldStayOpened = false
+                        canInteractWithZone = false
+                        TriggerServerEvent("ft_labs:enterLab", id)
+                    end
+                end)
             end, function()
             end)
 
