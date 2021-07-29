@@ -56,6 +56,15 @@ function Utils:putInInstance(_src, instance)
     SetPlayerRoutingBucket(_src, instance)
 end
 
+---getPlayerInv
+---@param _src number
+---@return table
+---@public
+function Utils:getPlayerInv(_src)
+    xPlayer = ESX.GetPlayerFromId(_src)
+    return xPlayer.getInventory(true)
+end
+
 ---setOnPublicInstance
 ---@param _src number
 ---@return void

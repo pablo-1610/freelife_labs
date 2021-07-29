@@ -18,6 +18,7 @@ TriggerEvent("esx:getSharedObject", function(obj)
     ESX = obj
     -- ESX loaded
     Labs:initialize()
+    LabsTransformer:init()
     Harvest:initialize()
 end)
 

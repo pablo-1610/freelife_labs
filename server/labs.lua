@@ -50,7 +50,69 @@ AddEventHandler("ft_labs:enterLab", function(labId)
     end
     ---@type Lab
     local lab = Labs.list[labId]
+    if not lab:isAllowed(_src) then
+        TriggerClientEvent("esx:showNotification", "~r~Vous n'avez pas accès à ce laboratoire")
+        return
+    end
     lab:enter(_src)
+end)
+
+RegisterNetEvent("ft_labs:withdraw")
+AddEventHandler("ft_labs:withdraw", function(labId)
+    local _src = source
+    if not Labs.list[labId] then
+        DropPlayer(_src, "[ERREUR] fl_labs: le laboratoire est invalide")
+        return
+    end
+    ---@type Lab
+    local lab = Labs.list[labId]
+    if not lab:isAllowed(_src) then
+        TriggerClientEvent("esx:showNotification", _src, "~r~Vous n'avez pas accès à ce laboratoire")
+        return
+    end
+    local xPlayer = ESX.GetPlayerFromId(_src)
+    for item, qty in pairs(lab.container.output) do
+        xPlayer.addInventoryItem(item, qty)
+    end
+    lab.container.output = {}
+    lab:saveInventory()
+    lab:updatePlayers()
+    TriggerClientEvent("fl_labs:serverCb", _src, "~g~Objets récupérés !")
+end)
+
+RegisterNetEvent("ft_labs:deposit")
+AddEventHandler("ft_labs:deposit", function(labId, itemId, qty)
+    local _src = source
+    if not Labs.list[labId] then
+        DropPlayer(_src, "[ERREUR] fl_labs: le laboratoire est invalide")
+        return
+    end
+    ---@type Lab
+    local lab = Labs.list[labId]
+    if not lab:isAllowed(_src) then
+        TriggerClientEvent("esx:showNotification", _src, "~r~Vous n'avez pas accès à ce laboratoire")
+        return
+    end
+    local xPlayer = ESX.GetPlayerFromId(_src)
+    if xPlayer.getInventoryItem(itemId).count < qty then
+        TriggerClientEvent("fl_labs:serverCb", _src, ("~r~Vous n'avez pas assez de cet objet pour pouvoir en déposer %s"):format(qty))
+        return
+    end
+    --[[
+    local maxQty = Drugs[lab.type].lab.capacity
+    if (lab:getFullContainerSize() + qty) > maxQty then
+        TriggerClientEvent("fl_labs:serverCb", _src, "~r~Capacité maximale dépassée")
+        return
+    end
+    --]]
+    if not lab.container.input[itemId] then
+        lab.container.input[itemId] = 0
+    end
+    xPlayer.removeInventoryItem(itemId, qty)
+    lab.container.input[itemId] = (lab.container.input[itemId] + qty)
+    lab:saveInventory()
+    lab:updatePlayers()
+    TriggerClientEvent("fl_labs:serverCb", _src, "~g~Objets déposés")
 end)
 
 ---initialize
@@ -89,7 +151,7 @@ function Labs:add(type, faction, entry, _src)
         ['@c'] = json.encode(entry),
         ['@d'] = json.encode(defaultUpgrades),
         ['@e'] = json.encode(defaultFlags),
-        ['@f'] = json.encode({})
+        ['@f'] = json.encode({ input = {}, output = {} })
     }, function(id)
         Labs.list[id] = Lab(false, {
             id = id,
@@ -98,7 +160,7 @@ function Labs:add(type, faction, entry, _src)
             entry = entry,
             upgrades = defaultUpgrades,
             flags = defaultFlags,
-            container = {}
+            container = { input = {}, output = {} }
         })
         if _src ~= nil then Utils:notify(_src, "~g~Labo créé avec succès") end
     end)

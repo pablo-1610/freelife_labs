@@ -18,6 +18,7 @@ zones.list = {}
 AddEventHandler("fl_labs:loaded", function()
     TriggerServerEvent("requestPredefinedZones")
     while true do
+        local cards = true
         local interval = 500
         local pos = GetEntityCoords(PlayerPedId())
         local closeToMarker = false
@@ -28,6 +29,7 @@ AddEventHandler("fl_labs:loaded", function()
                 closeToMarker = true
                 DrawMarker(zone.type, zoneCoords, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.75, 0.75, 0.75, zone.color.r, zone.color.g, zone.color.b, zone.color.a, 0, 1, 2, 0, nil, nil, 0)
                 if dist <= zone.distances[2] then
+                    cards = false
                     AddTextEntry("ZONES", (zone.help or "Appuyez sur ~INPUT_CONTEXT~ pour intéragir"))
                     DisplayHelpTextThisFrame("ZONES", false)
                     if IsControlJustPressed(0, 51) then
@@ -45,6 +47,7 @@ AddEventHandler("fl_labs:loaded", function()
         if closeToMarker then
             interval = 0
         end
+        canDisplayCard = cards
         Wait(interval)
     end
 end)

@@ -11,11 +11,19 @@
   via any medium is strictly prohibited. This code is confidential.
 --]]
 
-ESX, canInteractWithZone, isMenuOpened = nil, true, false
+ESX, canInteractWithZone, isMenuOpened, canDisplayCard, isWaitingForServerUpdate = nil, true, false, true, false
 
 Citizen.CreateThread(function()
     TriggerEvent("esx:getSharedObject", function(obj)
         ESX = obj
         TriggerEvent("fl_labs:loaded")
     end)
+end)
+
+RegisterNetEvent("fl_labs:serverCb")
+AddEventHandler("fl_labs:serverCb", function(notif)
+    isWaitingForServerUpdate = false
+    if notif ~= nil then
+        ESX.ShowNotification(notif)
+    end
 end)

@@ -22,33 +22,37 @@ Drugs = {
         bobIplGetter = "GetBikerWeedFarmObject",
 
         farm_components = {
-            {item = "terre", label = "Terre", max = 50, harvest = vector3(2873.1667, 4601.2075, 48.0166), blip = {208, 64, 0.9, "Récolte de terre"}},
-            {item = "graine", label = "Graine de cannabis", max = 50, harvest = vector3(-623.8909, 1464.9534, 308.8686)},
+            { item = "terre", max = 50, harvest = vector3(2873.1667, 4601.2075, 48.0166), blip = { 208, 64, 0.9, "Récolte de terre" } },
+            { item = "graine", max = 50, harvest = vector3(-623.8909, 1464.9534, 308.8686) },
         },
 
         production = {
+            --interval = 1000*60, -- Soit 30 secondes pour deux de weed
+            interval = 10000,
+
+            -- Pour le test on va boost les valeur
             prod_in = {
-                {1, "terre"},
-                {5, "graine"}
+                { 1, "terre" },
+                { 1, "graine" }
             },
 
             prod_out = {
-                {1, "weed"}
+                { 1, "weed" }
             }
         },
 
         lab = {
-            capacity = 50,
+            outcapacity = 100,
 
             upgrades = {
                 [UpgradeTypes.STYLE] = {
-                    [1] = {label = "Style basique", price = 150, set = "weed_standard_equip", default = 1},
-                    [2] = {label = "Style basique", price = 300, set = "weed_upgrade_equip"},
+                    [1] = { label = "Style basique", price = 150, set = "weed_standard_equip", default = 1 },
+                    [2] = { label = "Style basique", price = 300, set = "weed_upgrade_equip" },
                 },
 
                 [UpgradeTypes.SECURITY] = {
-                    [1] = {label = "Sécurité faible", price = 150, set = "weed_low_security", default = 1},
-                    [2] = {label = "Haute sécurité", price = 150, set = "weed_security_upgrade"}
+                    [1] = { label = "Sécurité faible", price = 150, set = "weed_low_security", default = 1 },
+                    [2] = { label = "Haute sécurité", price = 150, set = "weed_security_upgrade" }
                 }
             },
 
@@ -67,6 +71,7 @@ Drugs = {
             positions = {
                 inDoor = {pos = vector3(1062.11, -3186.45, -39.09), heading = 182.58},
                 exit = vector3(1065.93, -3183.43, -39.16),
+                container = vector3(1035.58, -3204.94, -38.17)
             };
 
             -- Additional things

@@ -52,27 +52,34 @@ local baseY = 0.10
 local baseWidth = 0.15
 local baseHeight = 0.03
 function Animations:advancedDesc(title, color, components)
-    DrawRect(baseX, baseY - 0.058, baseWidth, baseHeight - 0.025, color[1], color[2], color[3], 255)
-    DrawRect(baseX, baseY - 0.043, baseWidth, baseHeight, 0, 0, 0, 170)
-    Animations:drawTexts(baseX - 0.0395, baseY - (0.043) - 0.013, title, false, 0.35, {255, 255, 255, 255}, 2, 0)
-    -- Desc
-    --DrawRect(baseX, (baseY - 0.043) + 0.030, baseWidth, baseHeight, 0, 0, 0, 150)
-    for k, v in pairs(components) do
-        DrawRect(baseX, (baseY - 0.043) + (0.030*(k)), baseWidth, baseHeight, 0, 0, 0, 150)
-        Animations:drawTexts(baseX - 0.073, baseY - (0.043) + (0.030*(k)) - 0.013, v[1], false, 0.35, {255, 255, 255, 255}, 4, 0)
+    if canDisplayCard and not isMenuOpened then
+        DrawRect(baseX, baseY - 0.058, baseWidth, baseHeight - 0.025, color[1], color[2], color[3], 255)
+        DrawRect(baseX, baseY - 0.043, baseWidth, baseHeight, 0, 0, 0, 170)
+        Animations:drawTexts(baseX - 0.0395, baseY - (0.043) - 0.013, title, false, 0.35, { 255, 255, 255, 255 }, 2, 0)
+        -- Desc
+        --DrawRect(baseX, (baseY - 0.043) + 0.030, baseWidth, baseHeight, 0, 0, 0, 150)
+        for k, v in pairs(components) do
+            DrawRect(baseX, (baseY - 0.043) + (0.030 * (k)), baseWidth, baseHeight, 0, 0, 0, 150)
+            Animations:drawTexts(baseX - 0.073, baseY - (0.043) + (0.030 * (k)) - 0.013, v[1], false, 0.35, v[2] or { 255, 255, 255, 255 }, 4, 0)
+        end
     end
 end
 
-RegisterNetEvent("fl_lags:animTeleport")
-AddEventHandler("fl_lags:animTeleport", function(pos)
+RegisterNetEvent("fl_lags:animTeleportEnter")
+AddEventHandler("fl_lags:animTeleportEnter", function(pos, iplTable, container, type)
     canInteractWithZone = false
     DoScreenFadeOut(2500)
-    while not IsScreenFadedOut() do Wait(1) end
+    while not IsScreenFadedOut() do
+        Wait(1)
+    end
     SetEntityCoords(PlayerPedId(), pos.pos, false, false, false, false)
     SetEntityHealth(PlayerPedId(), pos.heading)
+    TriggerEvent("fl_labs:translateIplTable", iplTable, container, type)
     Wait(100)
     DoScreenFadeIn(1500)
-    while not IsScreenFadedIn() do Wait(1) end
+    while not IsScreenFadedIn() do
+        Wait(1)
+    end
     canInteractWithZone = true
 end)
 

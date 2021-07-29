@@ -11,8 +11,6 @@
   via any medium is strictly prohibited. This code is confidential.
 --]]
 
-
-
 local function openMenu(id)
     if isMenuOpened then
         return
